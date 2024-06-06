@@ -1,4 +1,5 @@
-mod upload_service;
+mod apis;
+mod services;
 
 use std::{fs, io};
 
@@ -8,7 +9,7 @@ use lazy_static::lazy_static;
 use log::info;
 use tera::Tera;
 
-use crate::upload_service::{upload, upload_api};
+use crate::services::{download_service, upload_service};
 
 lazy_static! {
     pub static ref TEMPLATES: Tera = {
@@ -35,8 +36,11 @@ async fn main() -> io::Result<()> {
         App::new()
             .wrap(Logger::default())
             .app_data(TempFileConfig::default().directory(SAVE_DIRECTORY.clone()))
-            .service(upload)
-            .service(upload_api)
+            .service(actix_files::Files::new("/files", "./files").show_files_listing())
+            .service(upload_service::upload)
+            .service(upload_service::api_upload)
+            .service(download_service::download)
+            .service(download_service::api_download)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

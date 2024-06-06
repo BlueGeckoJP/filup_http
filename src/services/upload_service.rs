@@ -19,8 +19,8 @@ pub async fn upload() -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok().content_type("text/html").body(view))
 }
 
-#[post("/upload/api")]
-pub async fn upload_api(
+#[post("/api/upload")]
+pub async fn api_upload(
     MultipartForm(form): MultipartForm<UploadApiForm>,
 ) -> Result<impl Responder, Error> {
     for f in form.files {
