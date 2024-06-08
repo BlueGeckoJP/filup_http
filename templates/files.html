@@ -15,7 +15,11 @@
 		<h1>Files</h1>
 		<div style="border: 1px solid black">
 			{% for file in files %}
-			<p>{{ file }}</p>
+			<div style="display: flex">
+				<p style="flex-grow: 1">{{ file.filename }}</p>
+				<a href="{{ file.path }}" download>Download</a>
+				<a>Remove</a>
+			</div>
 			{% endfor %}
 		</div>
 		<script

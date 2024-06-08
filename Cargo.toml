@@ -10,4 +10,5 @@ actix-web = "4"
 env_logger = "0"
 lazy_static = "1"
 log = "0"
+serde = { version = "1", features = ["derive"] }
 tera = "1"
