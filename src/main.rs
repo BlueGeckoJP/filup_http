@@ -6,7 +6,7 @@ extern crate log;
 
 use std::{fs, io};
 
-use actix_multipart::form::tempfile::TempFileConfig;
+use actix_multipart::form::{tempfile::TempFileConfig, MultipartFormConfig};
 use actix_web::{middleware::Logger, App, HttpServer};
 use lazy_static::lazy_static;
 use tera::Tera;
@@ -37,6 +37,7 @@ async fn main() -> io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(Logger::default())
+            .app_data(MultipartFormConfig::default().total_limit(10 * 1024 * 1024 * 1024)) // 10GB
             .app_data(TempFileConfig::default().directory(SAVE_DIRECTORY.clone()))
             .service(actix_files::Files::new("/files/raw", "./files").show_files_listing())
             .service(actix_files::Files::new("/assets", "./assets").show_files_listing())
@@ -44,6 +45,7 @@ async fn main() -> io::Result<()> {
             .service(service_upload::upload)
             .service(service_files::files)
             .service(api_upload::upload)
+            .service(api_remove::remove)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

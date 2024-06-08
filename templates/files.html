@@ -18,7 +18,9 @@
 			<div style="display: flex">
 				<p style="flex-grow: 1">{{ file.filename }}</p>
 				<a href="{{ file.path }}" download>Download</a>
-				<a>Remove</a>
+				<a href="javascript:onClickRemove('{{ file.filename }}')">
+					Remove
+				</a>
 			</div>
 			{% endfor %}
 		</div>
@@ -27,5 +29,6 @@
 			integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
 			crossorigin="anonymous"
 		></script>
+		<script src="assets/js/files.js"></script>
 	</body>
 </html>
