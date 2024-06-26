@@ -8,6 +8,7 @@ use std::{fs, io};
 
 use actix_multipart::form::{tempfile::TempFileConfig, MultipartFormConfig};
 use actix_web::{middleware::Logger, App, HttpServer};
+use clap::Parser;
 use lazy_static::lazy_static;
 use tera::Tera;
 
@@ -26,14 +27,25 @@ lazy_static! {
     pub static ref SAVE_DIRECTORY: String = String::from("./files");
 }
 
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Server port
+    #[arg(short, long, default_value_t = 8080)]
+    port: u16
+}
+
 #[actix_web::main]
 async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
+    let args = Args::parse();
+    info!("Arguments: {:?}", args);
+
     info!("Creating SAVE_DIRECTORY in progress");
     fs::create_dir_all(SAVE_DIRECTORY.clone())?;
 
-    info!("Starting HTTP server");
+    info!("Starting HTTP server at '127.0.0.1:{}'", args.port);
     HttpServer::new(|| {
         App::new()
             .wrap(Logger::default())
@@ -47,7 +59,7 @@ async fn main() -> io::Result<()> {
             .service(api_upload::upload)
             .service(api_remove::remove)
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", args.port))?
     .run()
     .await
 }
