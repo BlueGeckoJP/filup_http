@@ -45,7 +45,7 @@ async fn main() -> io::Result<()> {
     info!("Creating SAVE_DIRECTORY in progress");
     fs::create_dir_all(SAVE_DIRECTORY.clone())?;
 
-    info!("Starting HTTP server at '127.0.0.1:{}'", args.port);
+    info!("Starting HTTP server at '0.0.0.0:{}'", args.port);
     HttpServer::new(|| {
         App::new()
             .wrap(Logger::default())
@@ -59,7 +59,7 @@ async fn main() -> io::Result<()> {
             .service(api_upload::upload)
             .service(api_remove::remove)
     })
-    .bind(("127.0.0.1", args.port))?
+    .bind(("0.0.0.0", args.port))?
     .run()
     .await
 }
