@@ -80,12 +80,53 @@ section {
 	margin: auto;
 }
 
-section:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 4px 8px rgb(0, 0, 0, 0.1);
+section h2 {
+	margin-bottom: 10px;
 }
 
 section h2,
 p {
 	color: var(--base-color);
+}
+
+.button {
+	background-color: var(--base-color);
+	color: var(--main-color);
+	border: 0;
+	padding: 5px;
+	border-radius: 15px;
+}
+
+#upload-div {
+	display: flex;
+	align-items: center;
+}
+
+#upload-div label {
+	background-color: var(--base-color);
+	color: var(--main-color);
+	border: 0;
+	padding: 5px;
+	border-radius: 15px;
+	font-size: small;
+}
+
+#upload-div input[type="file"] {
+	display: none;
+}
+
+#upload-div p {
+	padding: 5px;
+	font-size: small;
+}
+
+#upload-button-div {
+	margin-top: 10px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+#upload-button-div button {
+	background-color: var(--accent-color);
+	width: 20%;
 }

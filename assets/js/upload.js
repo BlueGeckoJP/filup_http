@@ -1,7 +1,8 @@
 function onClickSubmitButton() {
-	const form = document.getElementById("upload-form");
-	const formData = new FormData(form);
-	const action = form.getAttribute("action");
+	const file = document.getElementById("fake-input-file").files[0];
+	const formData = new FormData();
+	formData.append("file", file);
+	const action = "/api/upload";
 	const options = {
 		method: "POST",
 		body: formData,
@@ -13,4 +14,10 @@ function onClickSubmitButton() {
 		}
 		alert("Error");
 	});
+}
+
+function onChangeFileChooser() {
+	const valInput = document.getElementById("fake-input-file");
+	const filename = document.getElementById("filename");
+	filename.innerHTML = valInput.value;
 }
