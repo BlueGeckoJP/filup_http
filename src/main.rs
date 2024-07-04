@@ -1,5 +1,6 @@
 mod apis;
 mod services;
+mod debug_hotreload;
 
 #[macro_use]
 extern crate log;
@@ -12,7 +13,7 @@ use clap::Parser;
 use tera::Tera;
 use once_cell::sync::{Lazy, OnceCell};
 
-use crate::{apis::*, services::*};
+use crate::{apis::*, services::*, debug_hotreload::debug_hotreload};
 
 pub static TEMPLATES: OnceCell<Mutex<Tera>> = OnceCell::new();
 pub static SAVE_DIRECTORY: Lazy<String> = Lazy::new(|| String::from("./files"));
@@ -44,6 +45,10 @@ async fn main() -> io::Result<()> {
 
     info!("Creating SAVE_DIRECTORY in progress");
     fs::create_dir_all(SAVE_DIRECTORY.clone())?;
+
+    if cfg!(debug_assertions) {
+        debug_hotreload()
+    }
 
     info!("Starting HTTP server at '0.0.0.0:{}'", args.port);
     HttpServer::new(|| {
