@@ -5,7 +5,7 @@ mod debug_hotreload;
 #[macro_use]
 extern crate log;
 
-use std::{fs, io, sync::Mutex};
+use std::{error::Error, fs, io::{self}, sync::Mutex};
 
 use actix_multipart::form::{tempfile::TempFileConfig, MultipartFormConfig};
 use actix_web::{middleware::Logger, App, HttpServer};
@@ -15,7 +15,7 @@ use once_cell::sync::{Lazy, OnceCell};
 
 use crate::{apis::*, services::*, debug_hotreload::debug_hotreload};
 
-pub static TEMPLATES: OnceCell<Mutex<Tera>> = OnceCell::new();
+pub static TEMPLATES: Templates = Templates { t: OnceCell::new() };
 pub static SAVE_DIRECTORY: Lazy<String> = Lazy::new(|| String::from("./files"));
 
 #[derive(Parser, Debug)]
@@ -26,19 +26,33 @@ struct Args {
     port: u16
 }
 
-#[actix_web::main]
-async fn main() -> io::Result<()> {
-    TEMPLATES.set({
+pub struct Templates {
+    t: OnceCell<Mutex<Tera>>
+}
+
+impl Templates {
+    fn update(&self) -> Result<(), Box<dyn Error>> {
         let tera = match Tera::new("templates/*.html") {
             Ok(t) => t,
-            Err(e) => {
-                panic!("Parse error(s): {}", e);
-            }
+            Err(e) => return Err(Box::new(e)),
         };
-        Mutex::new(tera)
-    }).unwrap();
+        {
+            if self.t.get().is_none() {
+                self.t.set(Mutex::new(tera)).unwrap();
+            } else {
+                let mut t = self.t.get().unwrap().lock().unwrap();
+                *t = tera;
+            }
+        }
+        Ok(())
+    }
+}
 
+#[actix_web::main]
+async fn main() -> io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+
+    TEMPLATES.update().unwrap();
 
     let args = Args::parse();
     info!("Arguments: {:?}", args);
@@ -47,7 +61,8 @@ async fn main() -> io::Result<()> {
     fs::create_dir_all(SAVE_DIRECTORY.clone())?;
 
     if cfg!(debug_assertions) {
-        debug_hotreload()
+        info!("Debugging is enabled");
+        debug_hotreload();
     }
 
     info!("Starting HTTP server at '0.0.0.0:{}'", args.port);

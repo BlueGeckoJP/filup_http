@@ -5,7 +5,7 @@ use crate::TEMPLATES;
 
 #[get("/")]
 pub async fn root() -> Result<HttpResponse, Error> {
-    let view = TEMPLATES.get().unwrap().lock().unwrap()
+    let view = TEMPLATES.t.get().unwrap().lock().unwrap()
         .render("root.html", &Context::new())
         .expect("Failed to load TEMPLATES (templates/root.html)");
     Ok(HttpResponse::Ok().content_type("text/html").body(view))

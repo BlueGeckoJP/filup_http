@@ -28,7 +28,7 @@ pub async fn files() -> Result<HttpResponse, Error> {
         .collect();
     let mut context = Context::new();
     context.insert("files", &files_vec);
-    let view = TEMPLATES.get().unwrap().lock().unwrap()
+    let view = TEMPLATES.t.get().unwrap().lock().unwrap()
         .render("files.html", &context)
         .expect("Failed to load TEMPLATES (templates/files.html)");
     Ok(HttpResponse::Ok().content_type("text/html").body(view))

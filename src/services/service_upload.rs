@@ -5,7 +5,7 @@ use crate::TEMPLATES;
 
 #[get("/upload")]
 pub async fn upload() -> Result<HttpResponse, Error> {
-    let view = TEMPLATES.get().unwrap().lock().unwrap()
+    let view = TEMPLATES.t.get().unwrap().lock().unwrap()
         .render("upload.html", &Context::new())
         .expect("Failed to load TEMPLATES (templates/upload.html)");
     Ok(HttpResponse::Ok().content_type("text/html").body(view))
