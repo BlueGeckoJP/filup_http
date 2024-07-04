@@ -4,28 +4,18 @@ mod services;
 #[macro_use]
 extern crate log;
 
-use std::{fs, io};
+use std::{fs, io, sync::Mutex};
 
 use actix_multipart::form::{tempfile::TempFileConfig, MultipartFormConfig};
 use actix_web::{middleware::Logger, App, HttpServer};
 use clap::Parser;
-use lazy_static::lazy_static;
 use tera::Tera;
+use once_cell::sync::{Lazy, OnceCell};
 
 use crate::{apis::*, services::*};
 
-lazy_static! {
-    pub static ref TEMPLATES: Tera = {
-        let tera = match Tera::new("templates/*.html") {
-            Ok(t) => t,
-            Err(e) => {
-                panic!("Parsin error(s): {}", e);
-            }
-        };
-        tera
-    };
-    pub static ref SAVE_DIRECTORY: String = String::from("./files");
-}
+pub static TEMPLATES: OnceCell<Mutex<Tera>> = OnceCell::new();
+pub static SAVE_DIRECTORY: Lazy<String> = Lazy::new(|| String::from("./files"));
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -37,6 +27,16 @@ struct Args {
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
+    TEMPLATES.set({
+        let tera = match Tera::new("templates/*.html") {
+            Ok(t) => t,
+            Err(e) => {
+                panic!("Parse error(s): {}", e);
+            }
+        };
+        Mutex::new(tera)
+    }).unwrap();
+
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let args = Args::parse();

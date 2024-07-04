@@ -776,8 +776,8 @@ dependencies = [
  "actix-web",
  "clap",
  "env_logger",
- "lazy_static",
  "log",
+ "once_cell",
  "serde",
  "tera",
 ]

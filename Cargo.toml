@@ -9,7 +9,7 @@ actix-multipart = "0"
 actix-web = "4"
 clap = { version = "4.5.7", features = ["derive"] }
 env_logger = "0"
-lazy_static = "1"
 log = "0"
+once_cell = "1.19.0"
 serde = { version = "1", features = ["derive"] }
 tera = "1"
