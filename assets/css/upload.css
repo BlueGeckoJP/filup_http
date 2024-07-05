@@ -1,100 +1,5 @@
-* {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
-
-	font-family: "Inter", sans-serif;
-	font-optical-sizing: auto;
-	font-weight: bold;
-	font-style: normal;
-	font-variation-settings: "slnt" 0;
-}
-
-:root {
-	--main-color: #4d5456;
-	--base-color: #eaf4fc;
-	--accent-color: #be9a90;
-
-	background-color: var(--base-color);
-	color: var(--main-color);
-}
-
-header {
-	background-color: var(--main-color);
-	padding: 15px 0;
-}
-
-header .header-container {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin: 0 auto;
-	padding: 0 20px;
-}
-
-header h1 {
-	margin: 0;
-	color: var(--base-color);
-}
-
-nav ul {
-	list-style: none;
-	display: flex;
-}
-
-nav ul li {
-	margin-left: 20px;
-}
-
-nav ul li a {
-	color: var(--base-color);
-	text-decoration: none;
-	padding: 8px 15px;
-	border-radius: 5px;
-	transition: color 0.3s ease;
-}
-
-nav ul li a:hover {
-	color: var(--accent-color);
-}
-
-main {
-	margin: 20px auto;
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 20px;
-}
-
-main a {
-	text-decoration: none;
-	color: inherit;
-}
-
-section {
-	background-color: var(--main-color);
-	padding: 20px;
-	border-radius: 15px;
-	box-shadow: 0 2px 4px rgb(0, 0, 0, 0.1);
-	transition: transform 0.3s ease, box-shadow 0.3s ease;
-	width: 90%;
-	margin: auto;
-}
-
 section h2 {
 	margin-bottom: 10px;
-}
-
-section h2,
-p {
-	color: var(--base-color);
-}
-
-.button {
-	background-color: var(--base-color);
-	color: var(--main-color);
-	border: 0;
-	padding: 5px;
-	border-radius: 15px;
 }
 
 #upload-div {
@@ -109,6 +14,16 @@ p {
 	padding: 5px;
 	border-radius: 15px;
 	font-size: small;
+	transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#upload-div label:hover {
+	transform: translateY(-3px);
+}
+
+#upload-div label:active {
+	transform: translateY(0);
+	background-color: var(--accent-color);
 }
 
 #upload-div input[type="file"] {
@@ -129,4 +44,8 @@ p {
 #upload-button-div button {
 	background-color: var(--accent-color);
 	width: 20%;
+}
+
+#upload-button-div button:active {
+	background-color: var(--base-color);
 }
