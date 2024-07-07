@@ -1,0 +1,25 @@
+section h2 {
+	margin-bottom: 10px;
+}
+
+#item-container {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border: 2px solid var(--accent-color);
+	border-radius: 15px;
+	margin-top: 5px;
+}
+
+#button-container {
+	margin-left: auto;
+}
+
+#button-container > button {
+	margin-left: 5px;
+}
+
+#not-found-msg {
+	display: block;
+	text-align: center;
+}
